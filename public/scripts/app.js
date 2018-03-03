@@ -1,85 +1,107 @@
 'use strict';
 
-console.log('app.js is running');
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var app = {
-    title: 'Indecision app',
-    subtitle: 'Some info',
-    options: []
-};
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var onFormSubmit = function onFormSubmit(event) {
-    event.preventDefault();
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-    var option = event.target.elements.option.value;
-    if (option) {
-        app.options.push(option);
-        event.target.elements.option.value = '';
-        renderApp();
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Counter = function (_React$Component) {
+    _inherits(Counter, _React$Component);
+
+    function Counter(props) {
+        _classCallCheck(this, Counter);
+
+        var _this = _possibleConstructorReturn(this, (Counter.__proto__ || Object.getPrototypeOf(Counter)).call(this, props));
+
+        _this.state = {
+            count: 0
+        };
+        _this.handleAddCount = _this.handleAddCount.bind(_this);
+        _this.handleSubstractCount = _this.handleSubstractCount.bind(_this);
+        _this.handleResetCount = _this.handleResetCount.bind(_this);
+        return _this;
     }
-};
 
-var onRemoveAll = function onRemoveAll() {
-    app.options = [];
-    renderApp();
-};
+    _createClass(Counter, [{
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate(prevProps, prevState) {
+            if (prevState.count !== this.state.count) {
+                localStorage.setItem('count', this.state.count);
+            }
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var countString = localStorage.getItem('count');
+            var count = parseInt(countString);
+            if (!isNaN(count)) {
+                this.setState(function () {
+                    return { count: count };
+                });
+            }
+        }
+    }, {
+        key: 'handleAddCount',
+        value: function handleAddCount() {
+            this.setState(function (prevState) {
+                var newState = Object.assign({}, prevState);
+                newState.count++;
+                return newState;
+            });
+        }
+    }, {
+        key: 'handleSubstractCount',
+        value: function handleSubstractCount() {
+            this.setState(function (prevState) {
+                var newState = Object.assign({}, prevState);
+                newState.count--;
+                return newState;
+            });
+        }
+    }, {
+        key: 'handleResetCount',
+        value: function handleResetCount() {
+            this.setState(function (prevState) {
+                var newState = Object.assign({}, prevState);
+                newState.count = 0;
+                return newState;
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                null,
+                React.createElement(
+                    'h1',
+                    null,
+                    'Count: ',
+                    this.state.count
+                ),
+                React.createElement(
+                    'button',
+                    { onClick: this.handleAddCount },
+                    '+1'
+                ),
+                React.createElement(
+                    'button',
+                    { onClick: this.handleSubstractCount },
+                    '-1'
+                ),
+                React.createElement(
+                    'button',
+                    { onClick: this.handleResetCount },
+                    'reset'
+                )
+            );
+        }
+    }]);
 
-var onMakeDecision = function onMakeDecision() {
-    var randomNum = Math.floor(Math.random() * app.options.length);
-    var option = app.options[randomNum];
-    alert(option);
-};
+    return Counter;
+}(React.Component);
 
-var renderApp = function renderApp() {
-    var itemList = app.options.map(function (item, index) {
-        return React.createElement(
-            'li',
-            { key: index },
-            item
-        );
-    });
-    var template = React.createElement(
-        'div',
-        null,
-        React.createElement(
-            'h1',
-            null,
-            app.title
-        ),
-        app.subtitle && React.createElement(
-            'p',
-            null,
-            app.subtitle
-        ),
-        React.createElement(
-            'p',
-            null,
-            app.options.length > 0 ? 'Here are your options:' : 'No options'
-        ),
-        React.createElement(
-            'button',
-            { disabled: app.options.length == 0, onClick: onMakeDecision },
-            'What shoud I do?'
-        ),
-        React.createElement(
-            'button',
-            { onClick: onRemoveAll },
-            'Remove all'
-        ),
-        React.createElement(
-            'ol',
-            null,
-            itemList
-        ),
-        React.createElement(
-            'form',
-            { onSubmit: onFormSubmit },
-            React.createElement('input', { type: 'text', name: 'option' }),
-            React.createElement('input', { type: 'submit', value: 'Add option' })
-        )
-    );
-
-    ReactDOM.render(template, document.getElementById('root'));
-};
-
-renderApp();
+ReactDOM.render(React.createElement(Counter, null), document.getElementById('root'));
