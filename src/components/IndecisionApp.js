@@ -4,12 +4,18 @@ import AddOption from './AddOption';
 import Options from './Options';
 import Header from './Header';
 import Action from './Action';
+import OptionModal from './OptionModal';
 
 
 export default class IndecisionApp extends React.Component {
 
   state = {
-    options: []
+    options: [],
+    selectedOption: undefined
+  }
+
+  handleCloseModal = () => {
+    this.setState(() => ({ selectedOption: undefined }));
   }
 
   handleDeleteOptions = () => {
@@ -18,7 +24,8 @@ export default class IndecisionApp extends React.Component {
 
   handlePick = () => {
     const randomIndex = Math.floor(Math.random() * this.state.options.length);
-    alert(this.state.options[randomIndex])
+    const selectedOption = this.state.options[randomIndex];
+    this.setState(() => ({ selectedOption }));
   };
 
   handleAddOption = (option) => {
@@ -68,19 +75,24 @@ export default class IndecisionApp extends React.Component {
   render() { 
     const subtitle = 'Put your live in the hands of a computer';
     return (
-      <div> 
+      <div className="main-bg"> 
         <Header 
           subtitle={subtitle}/>
-        <Action 
-          hasOptions={this.state.options.length > 0}
-          handlePick={this.handlePick}    
-        />
-        <Options 
-          options={this.state.options}
-          handleDeleteOptions={this.handleDeleteOptions}
-          handleDeleteOptionSingular={this.handleDeleteOptionSingular}
-        />
-        <AddOption handleAddOption={this.handleAddOption}/>
+        <div className="container">
+          <Action 
+            hasOptions={this.state.options.length > 0}
+            handlePick={this.handlePick}    
+          />
+          <Options 
+            options={this.state.options}
+            handleDeleteOptions={this.handleDeleteOptions}
+            handleDeleteOptionSingular={this.handleDeleteOptionSingular}
+          />
+          <AddOption handleAddOption={this.handleAddOption}/>
+          <OptionModal 
+            selectedOption={this.state.selectedOption}
+            handleCloseModal={this.handleCloseModal}/>
+        </div>
       </div>
     );
   }
