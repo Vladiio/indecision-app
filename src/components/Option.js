@@ -3,10 +3,12 @@ import React from 'react';
 const Option = (props) => (
   <div>
     {props.optionText}
-    <button 
+    <button
+      className="button button--link" 
       onClick={(e) => {
       props.handleDeleteOptionSingular(props.optionText)}}>
-      remove</button>
+      remove
+    </button>
   </div>
 );
 
